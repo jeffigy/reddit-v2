@@ -27,7 +27,12 @@ const OAuthButton: React.FC = () => {
         isLoading={loading}
         onClick={() => signInWithGoogle()}
       >
-        <Image src="/images/googlelogo.png" h={"20px"} mr={4} />
+        <Image
+          alt="google-logo"
+          src="/images/googlelogo.png"
+          h={"20px"}
+          mr={4}
+        />
         Continue with Google
       </Button>
       {error && <Text>{error.message}</Text>}
