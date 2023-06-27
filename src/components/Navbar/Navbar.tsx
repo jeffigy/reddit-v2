@@ -4,21 +4,32 @@ import SearchInput from "./SearchInput";
 import RightContent from "./RightContent/RightContent";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/clientApp";
+import Directory from "./Directory/Directory";
 
 const Navbar: React.FC = () => {
   const [user, loading, error] = useAuthState(auth);
   return (
-    <Flex bg={"white"} h={"44px"} p={"6px 12px"}>
-      <Flex align={"center"}>
-        <Image src="/images/redditFace.svg" h={"30px"} />
+    <Flex
+      bg="white"
+      height="44px"
+      padding="6px 12px"
+      justifyContent={{ md: "space-between" }}
+    >
+      <Flex
+        align={"center"}
+        mr={{ base: 0, md: 2 }}
+        width={{ base: "40px", md: "auto" }}
+      >
+        <Image src="/images/redditFace.svg" alt="logo" h={"30px"} />
         <Image
-          src="/images/redditText.svg"
-          h={"45px"}
           display={{ base: "none", md: "unset" }}
+          src="/images/redditText.svg"
+          alt="logo"
+          h={"46px"}
         />
       </Flex>
-      {/* <Directory />*/}
-      <SearchInput user={""} />
+      {user && <Directory />}
+      <SearchInput user={user} />
       <RightContent user={user} />
     </Flex>
   );
