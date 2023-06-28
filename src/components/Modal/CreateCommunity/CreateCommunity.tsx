@@ -1,10 +1,12 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { auth, firestore } from "@/firebase/clientApp";
 import {
-  Menu,
-  MenuButton,
+  Box,
   Button,
-  MenuList,
-  MenuItem,
+  Checkbox,
+  Divider,
+  Flex,
+  Icon,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,28 +14,20 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Box,
-  Divider,
-  Text,
-  Flex,
-  Input,
   Stack,
-  Checkbox,
-  Icon,
+  Text,
+  useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { HiLockClosed } from "react-icons/hi";
-import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
 import {
   doc,
   getDoc,
   runTransaction,
   serverTimestamp,
-  setDoc,
 } from "firebase/firestore";
-import { firestore } from "@/firebase/clientApp";
+import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/clientApp";
+import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
+import { HiLockClosed } from "react-icons/hi";
 type CreateCommunityProps = {
   open: boolean;
   handleClose: () => void;
@@ -43,6 +37,7 @@ const CreateCommunity: React.FC<CreateCommunityProps> = ({
   open,
   handleClose,
 }) => {
+  const toast = useToast();
   const [user] = useAuthState(auth);
   const [communityName, setCommunityName] = useState("");
   const [charCount, setcharCount] = useState(21);
@@ -61,8 +56,9 @@ const CreateCommunity: React.FC<CreateCommunityProps> = ({
     setcommunityType(event.target.name);
   };
 
+  //create the community document in firestore
   const handleCreateCommunity = async () => {
-    //validate community
+    //validate the form
     if (error) setError("");
     var format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
     if (format.test(communityName) || communityName.length < 3) {
@@ -72,9 +68,12 @@ const CreateCommunity: React.FC<CreateCommunityProps> = ({
       return;
     }
 
+    //set the button isLoading to true so that the user can't spam submit
     setLoading(true);
 
+    //try to create the document in communities collection
     try {
+      //firestore collection reference
       const communityDocRef = doc(firestore, "communities", communityName);
       await runTransaction(firestore, async (transaction) => {
         const communityDoc = await getDoc(communityDocRef);
@@ -99,8 +98,15 @@ const CreateCommunity: React.FC<CreateCommunityProps> = ({
         );
       });
     } catch (error: any) {
-      console.log("hanle community error", error);
+      console.log("handle community error", error);
       setError(error.message);
+      toast({
+        title: "Error",
+        status: "error",
+        isClosable: true,
+        description: error.message,
+        duration: 3000,
+      });
     }
     setLoading(false);
   };
