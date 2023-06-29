@@ -1,18 +1,22 @@
 import { Inter } from "next/font/google";
+import { useCallback, useRef, useState } from "react";
+import Webcam from "react-webcam";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const webcamRef = useRef<Webcam>(null);
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
+
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current?.getScreenshot();
+    setImgSrc(imageSrc || null);
+  }, []);
   return (
     <>
-      <p>root page</p>
-      <label>Take a picture of your face:</label>
-
-      <input type="file" name="picture" accept="image/*" capture="user" />
-
-      <label>Record a sample of your voice:</label>
-
-      <input type="file" name="voice" accept="audio/*" capture />
+      <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
+      <button onClick={capture}>Capture photo</button>
+      {imgSrc && <img src={imgSrc} alt="Captured" />}
     </>
   );
 }
