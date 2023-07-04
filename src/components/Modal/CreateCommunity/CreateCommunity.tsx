@@ -75,20 +75,22 @@ const CreateCommunity: React.FC<CreateCommunityProps> = ({
     try {
       //firestore collection reference
       const communityDocRef = doc(firestore, "communities", communityName);
+      //database transaction
       await runTransaction(firestore, async (transaction) => {
-        const communityDoc = await getDoc(communityDocRef);
-        //check if community exists
+        const communityDoc = await transaction.get(communityDocRef);
+        //check if community exists 
         if (communityDoc.exists()) {
           throw new Error(`Community ${communityName} is already taken`);
         }
         //create the community
-        await transaction.set(communityDocRef, {
+        transaction.set(communityDocRef, {
           createId: user?.uid,
           createdAt: serverTimestamp(),
           numberOfMembers: 1,
           privacyType: communityType,
         });
-        //create the community snippet on user
+        // create the community snippet on user by creating a
+        // sub collection inside the document of the user
         transaction.set(
           doc(firestore, `users/${user?.uid}/communitySnippets`, communityName),
           {

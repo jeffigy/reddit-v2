@@ -14,9 +14,9 @@ export default function Home() {
   }, []);
   return (
     <>
-      <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
+      {/* <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
       <button onClick={capture}>Capture photo</button>
-      {imgSrc && <img src={imgSrc} alt="Captured" />}
+      {imgSrc && <img src={imgSrc} alt="Captured" />} */}
     </>
   );
 }

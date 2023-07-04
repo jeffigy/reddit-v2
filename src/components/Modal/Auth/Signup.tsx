@@ -1,4 +1,4 @@
-import { authModalState } from "@/atoms/authModal";
+import { authModalState } from "@//atoms/authModal";
 import { Button, Flex, Input, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
@@ -40,17 +40,17 @@ const Signup: React.FC = () => {
 
   //* if you dont want to use cloud function to this instead
   //start of alternative solution
-  const createUserDocument = async (user: User) => {
-    await addDoc(
-      collection(firestore, "users"),
-      JSON.parse(JSON.stringify(user))
-    );
-  };
-  useEffect(() => {
-    if (userCred) {
-      createUserDocument(userCred.user);
-    }
-  }, [userCred]);
+  // const createUserDocument = async (user: User) => {
+  //   await addDoc(
+  //     collection(firestore, "users"),
+  //     JSON.parse(JSON.stringify(user))
+  //   );
+  // };
+  // useEffect(() => {
+  //   if (userCred) {
+  //     createUserDocument(userCred.user);
+  //   }
+  // }, [userCred]);
   //end of alternative solution
 
   return (
