@@ -8,6 +8,8 @@ import { GetServerSidePropsContext } from "next";
 import React from "react";
 import safeJsonStringify from "safe-json-stringify";
 import Header from "@/components/Community/Header";
+import CreatePostLink from "@/components/Community/CreatePostLink";
+import Posts from "@/components/Posts/Posts";
 
 type CommunityPageProps = {
   communityData: Community;
@@ -21,7 +23,8 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
       <Header communityData={communityData} />
       <PageContent>
         <>
-          <div>left side</div>
+          <CreatePostLink />
+          <Posts communityData={communityData} />
         </>
         <>
           <div>right side</div>
